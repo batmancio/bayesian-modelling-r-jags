@@ -1,0 +1,31 @@
+model {
+  # Likelihood for N games
+  for (i in 1:N) {
+    X[i] ~ dpois(mu1[i] + mu3[i])
+    Y[i] ~ dpois(mu2[i] + mu3[i])
+    
+    log(mu1[i]) <- alpha0[hometeam[i]] + alpha1[hometeam[i]] * off.eff_home[i] + alpha2[hometeam[i]] * shoot.eff_home[i] + gamma1 * def.eff_away[i]
+    log(mu2[i]) <- beta0[awayteam[i]]  + beta1[awayteam[i]]  * off.eff_away[i] + beta2[awayteam[i]]  * shoot.eff_away[i] + gamma2 * def.eff_home[i]
+    log(mu3[i]) <- gamma0 + 0.01 * (pace_H[i] + pace_A[i])
+
+    # Posterior Predictive Checks
+    Xnew[i] ~ dpois(mu1[i] + mu3[i])
+    Ynew[i] ~ dpois(mu2[i] + mu3[i])
+  }
+
+  # Team-level Priors
+  for (t in 1:nteams) {
+    alpha0[t] ~ dnorm(0, 0.001)
+    alpha1[t] ~ dnorm(0, 0.001)
+    alpha2[t] ~ dnorm(0, 0.001)
+
+    beta0[t]  ~ dnorm(0, 0.001)
+    beta1[t]  ~ dnorm(0, 0.001)
+    beta2[t]  ~ dnorm(0, 0.001)
+  }
+
+  # Global Efficiencies Priors
+  gamma0 ~ dnorm(0, 0.001)
+  gamma1 ~ dnorm(0, 0.001)
+  gamma2 ~ dnorm(0, 0.001)
+}

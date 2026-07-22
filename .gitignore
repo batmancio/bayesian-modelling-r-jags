@@ -1,0 +1,13 @@
+# R environment ignore rules
+.Rhistory
+.RData
+.RDataTmp
+.RUserData
+*.Rproj
+.Rproj.user/
+*.Rcheck/
+*.Rout
+
+# JAGS / MCMC temporaries
+*.tmp
+jags_debug.txt
